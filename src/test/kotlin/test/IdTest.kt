@@ -1,5 +1,11 @@
-import dev.jonium.idgen.IdResource
+package test
+
 import dev.jonium.idgen.pojo.Id
+import dev.jonium.idgen.resources.IdResource
+import dev.jonium.idgen.resources.RootResource
+import jakarta.ws.rs.client.WebTarget
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
 import org.glassfish.jersey.logging.LoggingFeature
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.servlet.ServletContainer
@@ -15,9 +21,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
-import javax.ws.rs.client.WebTarget
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class IdTest {
@@ -36,7 +39,7 @@ class IdTest {
                 enable(TestProperties.LOG_TRAFFIC)
                 return ResourceConfig().property(
                     LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, Level.ALL.toString()
-                ).registerClasses(IdResource::class.java)
+                ).registerClasses(IdResource::class.java, RootResource::class.java)
             }
 
             override fun getTestContainerFactory(): TestContainerFactory = GrizzlyWebTestContainerFactory()
@@ -53,6 +56,13 @@ class IdTest {
     }
 
     @Test
+    fun rootTest() {
+        val resp = test.target("").request().get()
+        assert(resp.status == Response.Status.OK.statusCode)
+        println("Root ok")
+    }
+
+    @Test
     fun lengthTest() {
         get {
             val res = it.request().get()
@@ -65,6 +75,7 @@ class IdTest {
             }
             assert(res.mediaType == MediaType.APPLICATION_JSON_TYPE) { "Expected JSON got ${res.mediaType}" }
             val id = res.readEntity(Id::class.java)
+            println("Length ok")
             println(id)
         }
     }
