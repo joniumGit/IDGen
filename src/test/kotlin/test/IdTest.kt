@@ -1,6 +1,6 @@
 package test
 
-import dev.jonium.idgen.pojo.Id
+import dev.jonium.idgen.beans.Id
 import dev.jonium.idgen.resources.IdResource
 import dev.jonium.idgen.resources.RootResource
 import jakarta.ws.rs.client.WebTarget
@@ -59,23 +59,20 @@ class IdTest {
     fun rootTest() {
         val resp = test.target("").request().get()
         assert(resp.status == Response.Status.OK.statusCode)
+        assert(resp.mediaType == MediaType.APPLICATION_JSON_TYPE)
+        println(resp.readEntity(String::class.java))
         println("Root ok")
     }
 
     @Test
-    fun lengthTest() {
+    fun readTest() {
         get {
             val res = it.request().get()
             assert(res.status == Response.Status.OK.statusCode) {
-                "Expected 200 got ${res.status} and ${
-                    res.readEntity(
-                        String::class.java
-                    )
-                }"
+                "Expected 200 got ${res.status} and ${res.readEntity(String::class.java)}"
             }
             assert(res.mediaType == MediaType.APPLICATION_JSON_TYPE) { "Expected JSON got ${res.mediaType}" }
             val id = res.readEntity(Id::class.java)
-            println("Length ok")
             println(id)
         }
     }

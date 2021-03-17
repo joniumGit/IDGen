@@ -1,6 +1,6 @@
 package dev.jonium.idgen.logic
 
-import dev.jonium.idgen.pojo.Id
+import dev.jonium.idgen.beans.Id
 import java.math.BigInteger
 import java.util.*
 
@@ -17,7 +17,7 @@ private fun ThreadLocal<Short>.fetch(): Short {
 
 private val start by lazy {
     val c = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-    c.set(Calendar.YEAR, 2020)
+    c.set(Calendar.YEAR, 2021)
     c.set(Calendar.DAY_OF_MONTH, 1)
     c.set(Calendar.MONTH, 0)
     c.set(Calendar.HOUR_OF_DAY, 12)

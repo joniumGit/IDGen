@@ -6,7 +6,7 @@
 
     <groupId>dev.jonium</groupId>
     <artifactId>idgen</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <name>idgen</name>
     <packaging>war</packaging>
 
