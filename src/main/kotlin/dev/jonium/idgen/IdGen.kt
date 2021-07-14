@@ -79,12 +79,12 @@ fun generate(): Id {
 
 fun Route.docs() {
     static("/docs") {
-        defaultResource("index.html")
+        defaultResource("docs/index.html")
     }
 }
 
 fun Route.ids() {
-    get("/") {
+    post("/") {
         if ("n" in call.request.queryParameters) {
             call.request.queryParameters["n"]?.let {
                 try {
