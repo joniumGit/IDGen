@@ -1,0 +1,107 @@
+openapi: 3.0.1
+servers:
+  - url: 'https://api.jonium.dev/idgen'
+    description: Sample API Server
+info:
+  title: IDGen
+  version: 1.0.0
+  description: An Id Generator inspired by Discord and Twitter snowflake formats to provide constant length unique IDs.
+  contact:
+    name: GitHub Repo
+    url: 'https://github.com/joniumGit/IDGen'
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+paths:
+  /:
+    summary: Id endpoint
+    description: Generates ids for each request or a batch of ids
+    post:
+      tags:
+        - IDGen
+      summary: Generate an Id
+      parameters:
+        - in: query
+          name: 'n'
+          description: Toggle and convenience parameter for returning multiple values at once. If present, always returns an _id-collection_.
+          allowEmptyValue: false
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1000
+          example: 20
+      responses:
+        '200':
+          description: Successfull call
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/id-collection'
+                  - $ref: '#/components/schemas/id'
+              examples:
+                single:
+                  $ref: '#/components/examples/id'
+                multiple:
+                  $ref: '#/components/examples/id-collection'
+
+
+  /docs:
+    summary: Api Doc
+    description: Returns the Api documentation
+    get:
+      tags:
+        - Docs
+      summary: Documentation
+      responses:
+        '200':
+          description: Api Doc
+          content:
+            text/html: { }
+components:
+  schemas:
+    id:
+      description: An unique identifier of constant length as a string
+      type: object
+      properties:
+        id:
+          description: An id
+          type: string
+          pattern: ^\d{7,20}$
+          minLength: 7
+          maxLength: 20
+          nullable: false
+      required:
+        - id
+      example:
+        $ref: '#/components/examples/id'
+    id-collection:
+      description: Collection of ids
+      type: object
+      properties:
+        items:
+          description: An array of ids
+          type: array
+          minItems: 0
+          uniqueItems: true
+          items:
+            type: string
+      required:
+        - items
+      example:
+        $ref: '#/components/examples/id-collection'
+  examples:
+    id:
+      summary: Single id
+      description: Example of a single id
+      value:
+        id: "12314365940956004435"
+    id-collection:
+      summary: Collection of ids
+      description: Example of a collection of ids
+      value:
+        items:
+          - "12314365940956004435"
+          - "12314365940956005531"
+          - "12314365940956003213"
