@@ -17,7 +17,7 @@ paths:
   /:
     summary: Id endpoint
     description: Generates ids for each request or a batch of ids
-    post:
+    get:
       tags:
         - IDGen
       summary: Generate an Id
