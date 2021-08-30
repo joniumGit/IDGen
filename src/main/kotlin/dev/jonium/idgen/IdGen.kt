@@ -84,7 +84,9 @@ fun Route.docs() {
 }
 
 fun Route.ids() {
-    post("/") {
+    get("/") {
+        call.response.header("Cache-Control", "no-store, no-cache, must-revalidate")
+        call.response.header("Expires", 0)
         if ("n" in call.request.queryParameters) {
             call.request.queryParameters["n"]?.let {
                 try {
