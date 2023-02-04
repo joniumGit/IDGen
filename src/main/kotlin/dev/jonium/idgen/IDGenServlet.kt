@@ -8,10 +8,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 
-const val TEXT = "text/text"
-const val JSON = "application/json"
-
-
 @WebServlet("/*")
 class IDGenServlet : HttpServlet() {
 
@@ -33,13 +29,13 @@ class IDGenServlet : HttpServlet() {
                     req.getParameter("n")?.let {
                         val n = it.toInt()
                         if (n > 1000 || n <= 0) {
-                            throw IllegalArgumentException("Too high n value")
+                            throw IllegalArgumentException("Invalid id count")
                         } else {
                             Json.encodeToString(IdCollection((0 until n).map { generate().id }.toList()))
                         }
                     } ?: Json.encodeToString(generate())
                 }.onFailure {
-                    resp.status = 404
+                    resp.status = 422
                     resp.contentType = JSON
                     resp.writer.use {
                         it.write("{\"error\": \"invalid parameters in request\"}")
@@ -66,7 +62,7 @@ class IDGenServlet : HttpServlet() {
                         /:
                           parameters:
                             - n:
-                              - range 1..1000
+                              - range [1,1000]
                               - integer
                           examples:
                             - No n specified:
